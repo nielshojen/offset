@@ -195,8 +195,5 @@ def main():
             if os.listdir(logout_every_dir):
                 process_items(logout_every_dir)
 
-    if args.version:
-        print __version__
-
 if __name__ == '__main__':
     main()
