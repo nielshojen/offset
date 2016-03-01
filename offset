@@ -176,14 +176,6 @@ def process_items(path, delete_items=False, once=False):
 def main():
     '''Main method'''
 
-    parser = argparse.ArgumentParser(description='This script automatically \
-            processes packages and scripts at first boot \
-            and/or each (subsequent) user login.')
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument('--logout', action='store_true')
-    group.add_argument('--logout-every', action='store_true')
-    args = parser.parse_args()
-
     if os.listdir(logout_every_dir):
         process_items(logout_every_dir)
     else:
