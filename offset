@@ -158,32 +158,16 @@ def process_items(path, delete_items=False, once=False):
         else:
             logging.error('Bad permissions: %s', pathname)
 
-    if once:
-        try:
-            d = FoundationPlist.readPlist(run_once_plist)
-        except FoundationPlist.FoundationPlistException:
-            d = {}
-
     for package in packages:
         install_package(package)
         if delete_items: cleanup(package)
 
     for profile in profiles:
-        if once:
-            if profile not in d:
-                if install_profile(profile):
-                    d[profile] = datetime.datetime.now()
-        else:
-            task = install_profile(profile)
+        task = install_profile(profile)
         if delete_items: cleanup(profile)
 
     for script in scripts:
-        if once:
-            if script not in d:
-                if run_script(script):
-                    d[script] = datetime.datetime.now()
-        else:
-            task = run_script(script)
+        task = run_script(script)
         if delete_items: cleanup(script)
 
     if d:
@@ -201,11 +185,8 @@ def main():
     args = parser.parse_args()
 
     if args.logout:
-        if console_user not in ignored_users:
-            if os.listdir(logout_every_dir):
-                process_items(logout_every_dir)
-            if os.listdir(logout_once_dir):
-                process_items(logout_once_dir, once=True)
+        if os.listdir(logout_every_dir):
+            process_items(logout_every_dir)
         else:
             logging.info('Skipping logout scripts for user %s', console_user)
 
