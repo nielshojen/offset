@@ -184,16 +184,10 @@ def main():
     group.add_argument('--logout-every', action='store_true')
     args = parser.parse_args()
 
-    if args.logout:
-        if os.listdir(logout_every_dir):
-            process_items(logout_every_dir)
-        else:
-            logging.info('Skipping logout scripts for user %s', console_user)
-
-    if args.logout_every:
-        if console_user not in ignored_users:
-            if os.listdir(logout_every_dir):
-                process_items(logout_every_dir)
+    if os.listdir(logout_every_dir):
+        process_items(logout_every_dir)
+    else:
+        logging.info('Skipping logout scripts for user %s', console_user)
 
 if __name__ == '__main__':
     main()
