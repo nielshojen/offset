@@ -170,7 +170,8 @@ def process_items(path, delete_items=False, once=False):
 
 def main():
     '''Main method'''
-
+    console_user = SCDynamicStoreCopyConsoleUser(None, None, None)[0]
+    
     if os.listdir(logout_every_dir):
         process_items(logout_every_dir)
     else:
