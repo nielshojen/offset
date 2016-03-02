@@ -1,4 +1,4 @@
-# offset
+# Offset
 Automatically process packages and scripts at logout
 
 ## Backstory
@@ -11,10 +11,10 @@ Apple (since 10.4, I believe) has officially deprecated in [Login and Logout Hoo
 So this, which can be used in conjunction with Outset if you want both scripts for login/boot/on-demand _and_ logout scripts, you can install both Outset _and_ Offset. Of course, you can also write custom Launch Agents and Launch Daemons for every single script, but the point here is convenience--placing scripts in a few folders to run instead of creating separate launchd's for each script.
 
 ## Technical Notes on Implementation
-.. Since the logout hook (even though it runs as root) doesn't seem to have any issues (apart from Apple officially deprecating it), that's what Offset uses.
-.. In addition to slightly modifying a few variable names, I significantly pared down Joseph Chilcote's original script, because the logout hook can take only a script path and not arguments (yes, I tested this) and because I couldn't come up with any use cases for a logout-once scenario. I figured anything you wanted to do once you could do with a login-once using Outset instead of logout-once in Offset. Logout scripts typically clean something up every time a user logs in. A login script that runs once per user usually sets up something as a default, which the user can later change.
-.. If you have only one script to run at logout, you may want to consider using the LoginHook directly with the script instead of using Offset, because the direct linking will give you access to the $1 variable (currently-logged-in user).
-.. Keep in mind the LoginHook (which is what Offset uses) runs any scripts as root. Be careful when you're writing those scripts!
+  * Since the logout hook (even though it runs as root) doesn't seem to have any issues (apart from Apple officially deprecating it), that's what Offset uses.
+  * In addition to slightly modifying a few variable names, I significantly pared down Joseph Chilcote's original script, because the logout hook can take only a script path and not arguments (yes, I tested this) and because I couldn't come up with any use cases for a logout-once scenario. I figured anything you wanted to do once you could do with a login-once using Outset instead of logout-once in Offset. Logout scripts typically clean something up every time a user logs in. A login script that runs once per user usually sets up something as a default, which the user can later change.
+ * If you have only one script to run at logout, you may want to consider using the LoginHook directly with the script instead of using Offset, because the direct linking will give you access to the $1 variable (currently-logged-in user).
+ * Keep in mind the LoginHook (which is what Offset uses) runs any scripts as root. Be careful when you're writing those scripts!
 
 ## How to Install Offset
 
