@@ -1,6 +1,9 @@
 # Offset
 Automatically process packages and scripts at logout
 
+## Recommendation
+I'd recommend you use [my fork of outset](https://github.com/aysiu/outset) instead of this, because it incorporates a login window trigger instead of the deprecated logout hook. I'm currently waiting for it to be merged into the original Outset as a pull request, but it should be functional (would love some testers).
+
 ## Backstory
 Heavily based on (as in, reuses barely-tweaked code from) Joseph Chilcote's [Outset](https://github.com/chilcote/outset), which processes packages and scripts at boot and login. He believed the running of logout scripts was outside the scopes of his project and also had reservations about the implementation, so he suggested I could make it and call it _offset_, which is actually a great name, when you start looking at all the dictionary definitions of the word (a counterbalance, an offshoot, an actual outset still).
 
