@@ -21,21 +21,10 @@ So this, which can be used in conjunction with Outset if you want both scripts f
 ### Easy .pkg Method
 Go to the [the releases page](https://github.com/aysiu/offset/releases), where you'll be able to download a .pkg file and just run it. 
 
-### Manual Method
-Alternatively, you can manually set things up.
-
-Create a /usr/local/offset directory and put the **offset** file in there
-> /usr/local/offset/**offset**
-
-Create a directory for **logout-every** scripts
-
-> /usr/local/offset/**logout-every**
-
-Make sure they're both owned by root; set to be read/write/execute, read/execute, and read/execute; and then the offset script added as a logout hook
+### Script Method
+Download the project as a zip and unzip it. Make sure to keep the _offset_ file in the same folder as the _InstallOffset.sh_ script, and then run the **InstallOffset.sh** script as root. Example command (your path may differ):
 ```
-sudo chown -R root:wheel /usr/local/offset
-sudo chmod -R 755 /usr/local/offset
-sudo defaults write com.apple.loginwindow LogoutHook "/usr/local/offset/offset"
+sudo ~/Downloads/offset-master/InstallOffset.sh
 ```
 
 ## How to use Offset
