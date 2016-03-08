@@ -28,9 +28,9 @@ Go to the [the releases page](https://github.com/aysiu/offset/releases), where y
 
 ### Manual Method
 Download the .zip and put the following files/folders in the following places
-/usr/local/offset/**offset**
-/usr/local/offset/**FoundationPlist**
-/Library/LaunchAgents/**com.github.offset.logout.plist**
+* /usr/local/offset/**offset**
+* /usr/local/offset/**FoundationPlist**
+* /Library/LaunchAgents/**com.github.offset.logout.plist**
 
 ## How to use Offset
 Put any scripts or packages in the **/usr/local/offset/logout-every** folder and make sure they have root:wheel ownership. The scripts should have 755 permissions. Packages should have 644 permissions.
