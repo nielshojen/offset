@@ -186,7 +186,16 @@ def main():
             help='Remove user from ignored list')
     args = parser.parse_args()    
     ignored_users = []
-    
+    prefs = {}
+
+    if not os.path.exists(share_dir):
+        os.makedirs(share_dir)
+
+    if os.path.exists(outset_preferences):
+        prefs = FoundationPlist.readPlist(outset_preferences)
+        if prefs.get('ignored_users'):
+            ignored_users = prefs['ignored_users']
+
     if args.logout:
         # Logout is really login window. Check both the last username and the last user state is 'loggedOut' or 'Restart'
         current_loginwindow = FoundationPlist.readPlist(loginwindow_preferences)
