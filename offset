@@ -197,17 +197,12 @@ def main():
             ignored_users = prefs['ignored_users']
 
     if args.logout:
-        # Check the last last | head output to see if it was blank or not
-        if prefs.get('lasthead'):
-            lasthead = prefs('lasthead')
-        else:
-            lasthead = '';
         # Logout is really login window. Check both the  username and the last user state is 'loggedOut' or 'Restart'
         current_loginwindow = FoundationPlist.readPlist(loginwindow_preferences)
         lastuser = current_loginwindow['lastUser']
         console_user = current_loginwindow['lastUserName']
-        # If a user just logged out or if the machine was just restarted (and last | head -n1 was "still logged in")
-        if (lastuser == 'loggedOut') or (lastuser == 'Restart' and lasthead):
+        # If a user just logged out or if the machine was just restarted
+        if (lastuser == 'loggedOut') or (lastuser == 'Restart'):
             if console_user not in ignored_users:
                 if os.listdir(logout_every_dir):
                     process_items(logout_every_dir)
@@ -215,15 +210,7 @@ def main():
                     logging.info('Skipping logout script because user %s is on the ignored user list', console_user)
         else:
             logging.info('Skipping logout script because login state is %s and should be loggedOut or Restart', lastuser)
-        # Store the lasthead information for next time
-        getlasthead = 'last | head -n1 | grep "still logged in"'
-        p = subprocess.Popen(getlasthead, shell=True, bufsize=0, stdout=subprocess.PIPE, universal_newlines=True)
-        p.wait()
-        lasthead = p.stdout.read()
-        p.stdout.close()
-        prefs['lasthead'] = lasthead
-        FoundationPlist.writePlist(prefs, offset_preferences)
-        
+
     if args.add_ignored_user:
         users_to_add = args.add_ignored_user
         if not prefs.get('ignored_users'):
