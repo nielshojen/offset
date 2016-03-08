@@ -15,13 +15,17 @@ So Offset, which can be used in conjunction with Outset if you want both scripts
 ## Technical Notes on Implementation
 * In addition to slightly modifying a few variable names, I significantly pared down Joseph Chilcote's original script, because I couldn't come up with any use cases for a logout-once scenario. I figured anything you wanted to do once you could do with a login-once using Outset instead of logout-once in Offset. Logout scripts typically clean something up every time a user logs in. A login script that runs once per user usually sets up something as a default, which the user can later change.
 * If you have only one script to run at logout, you may want to consider using Apple's deprecated LogoutHook instead of using Offset, because the direct linking will give you access to the $1 variable (currently-logged-in user). With Offset, your scripts will have to figure out the last-logged-in user from the output of ```defaults read /Library/Preferences/com.apple.loginwindow lastUserName```
+
+### Caveats
 * Even though in practice, Offset will essentially run logout scripts, technically it's actually running login window scripts. There are four scenarios in which this is a bit messy, but for all practical purposes will likely not cause any harm:
  * If you reboot instead of log out, your "logout" scripts won't run until after the reboot (not technically right when the user has logged out).
  * If you shut down and then start up again, similarly, your "logout" scripts won't run until you start up and get to the login screen.
  * If you log out and _then_ reboot, it's very possible your "logout" scripts will run twice for the same user--once when you've logged out, and then once when you've reboot.
 * Keep in mind Offset runs any scripts as root. Be careful when you're writing those scripts!
 
-(Oddly enough, even if you have a user set to automatically log in, Offset will still work when you reboot your Mac--I've tested this!)
+### Unexpected Bonuses
+* Oddly enough, even if you have a user set to automatically log in, Offset will still work when you reboot your Mac--I've tested this!
+* And if you have a user logged in locally on a machine and another user logged in simultaneously on the same machine remotely via Apple Remote Desktop, and both uers log out around the same time, scripts will run both times (and the lastUserName will work in scripts for both users). I have tested this.
 
 ## How to Install Offset
 ### .pkg Method
