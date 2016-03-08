@@ -18,9 +18,10 @@ So Offset, which can be used in conjunction with Outset if you want both scripts
 * Even though in practice, Offset will essentially run logout scripts, technically it's actually running login window scripts. There are four scenarios in which this is a bit messy, but for all practical purposes will likely not cause any harm:
  * If you reboot instead of log out, your "logout" scripts won't run until after the reboot (not technically right when the user has logged out).
  * If you shut down and then start up again, similarly, your "logout" scripts won't run until you start up and get to the login screen.
- * If you have a user who is set to automatically log in... then I don't know why you're using Offset, but it's likely (I haven't tested this yet--please let me know what you find) that your "logout" scripts won't run at all.
  * If you log out and _then_ reboot, it's very possible your "logout" scripts will run twice for the same user--once when you've logged out, and then once when you've reboot.
 * Keep in mind Offset runs any scripts as root. Be careful when you're writing those scripts!
+
+(Oddly enough, even if you have a user set to automatically log in, Offset will still work when you reboot your Mac--I've tested this!)
 
 ## How to Install Offset
 ### .pkg Method
