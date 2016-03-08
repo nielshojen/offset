@@ -25,6 +25,7 @@ __version__ = '1.0.0'
 
 import argparse
 import datetime
+import FoundationPlist
 import logging
 import os
 import platform
