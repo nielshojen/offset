@@ -10,8 +10,7 @@
   </array>
   <key>ProgramArguments</key>
   <array>
-    <string>/usr/local/outset/outset</string>
-    <string>--logout</string>
+    <string>/usr/local/offset/offset</string>
   </array>
   <key>RunAtLoad</key>
   <true/>
