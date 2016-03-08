@@ -39,3 +39,6 @@ Download the .zip and put the following files/folders in the following places
 
 ## How to use Offset
 Put any scripts or packages in the **/usr/local/offset/logout-every** folder and make sure they have root:wheel ownership. The scripts should have 755 permissions. Packages should have 644 permissions.
+
+## Acknowledgements
+Huge shoutout to @chiclote, whose code this project (in a Frankenstein's monster way) is based on a rearrangement of. Also kudos to @gregneagle for suggesting the login window Launch Agent as an alternative to the logout hook or the interrupted user-context Launch Agent.
