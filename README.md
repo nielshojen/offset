@@ -23,6 +23,7 @@ So Offset, which can be used in conjunction with Outset if you want both scripts
 * Keep in mind Offset runs any scripts as root. Be careful when you're writing those scripts!
 
 ## How to Install Offset
+### .pkg Method
 Go to the [the releases page](https://github.com/aysiu/offset/releases), where you'll be able to download a .pkg file and just run it. 
 
 ### Manual Method
