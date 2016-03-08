@@ -191,8 +191,8 @@ def main():
     if not os.path.exists(share_dir):
         os.makedirs(share_dir)
 
-    if os.path.exists(outset_preferences):
-        prefs = FoundationPlist.readPlist(outset_preferences)
+    if os.path.exists(offset_preferences):
+        prefs = FoundationPlist.readPlist(offset_preferences)
         if prefs.get('ignored_users'):
             ignored_users = prefs['ignored_users']
 
