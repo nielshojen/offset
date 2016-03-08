@@ -21,7 +21,7 @@ Run scripts and install pkgs or profiles at logout.
 ##############################################################################
 
 __author__ = 'aysiu after Joseph Chilcote'
-__version__ = '1.0.9'
+__version__ = '1.1.2'
 
 import argparse
 import datetime
