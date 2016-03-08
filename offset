@@ -215,7 +215,7 @@ def main():
         # Regardless of what happens, let's store the last state for next time
         if not prefs.get('last_state'):
             prefs['last_state'] = []
-        prefs['last_state'].extend(lastuser)
+        prefs['last_state'] = lastuser
         FoundationPlist.writePlist(prefs, offset_preferences)
 
     if args.add_ignored_user:
