@@ -195,13 +195,16 @@ def main():
         prefs = FoundationPlist.readPlist(offset_preferences)
         if prefs.get('ignored_users'):
             ignored_users = prefs['ignored_users']
+        if prefs.get('last_state'):
+            last_state = prefs['last_state']
 
     if args.logout:
         # Logout is really login window. Check both the last username and the last user state is 'loggedOut' or 'Restart'
         current_loginwindow = FoundationPlist.readPlist(loginwindow_preferences)
         lastuser = current_loginwindow['lastUser']
         console_user = current_loginwindow['lastUserName']
-        if (lastuser == 'loggedOut') or (lastuser == 'Restart'):
+        # If a user just logged out or if the machine was just restarted but not logged out before restating...
+        if (lastuser == 'loggedOut') or (last_state != 'loggedOut' and lastuser == 'Restart'):
             if console_user not in ignored_users:
                 if os.listdir(logout_every_dir):
                     process_items(logout_every_dir)
@@ -209,6 +212,11 @@ def main():
                     logging.info('Skipping logout script because user %s is on the ignored user list', console_user)
         else:
             logging.info('Skipping logout script because login state is %s and should be loggedOut or Restart', lastuser)
+        # Regardless of what happens, let's store the last state for next time
+        if not prefs.get('last_state'):
+            prefs['last_state'] = []
+        prefs['last_state'].extend(lastuser)
+        FoundationPlist.writePlist(prefs, offset_preferences)
 
     if args.add_ignored_user:
         users_to_add = args.add_ignored_user
