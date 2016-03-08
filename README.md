@@ -23,15 +23,13 @@ So Offset, which can be used in conjunction with Outset if you want both scripts
 * Keep in mind Offset runs any scripts as root. Be careful when you're writing those scripts!
 
 ## How to Install Offset
-
-### Easy .pkg Method
 Go to the [the releases page](https://github.com/aysiu/offset/releases), where you'll be able to download a .pkg file and just run it. 
 
-### Script Method
-Download the project as a zip and unzip it. Make sure to keep the _offset_ and _com.github.offset.logout.plist files in the same folder as the _InstallOffset.sh_ script, and then run the **InstallOffset.sh** script as root. Example command (your path may differ):
-```
-sudo ~/Downloads/offset-master/InstallOffset.sh
-```
+### Manual Method
+Download the .zip and put the following files/folders in the following places
+/usr/local/offset/**offset**
+/usr/local/offset/**FoundationPlist**
+/Library/LaunchAgents/**com.github.offset.logout.plist**
 
 ## How to use Offset
 Put any scripts or packages in the **/usr/local/offset/logout-every** folder and make sure they have root:wheel ownership. The scripts should have 755 permissions. Packages should have 644 permissions.
