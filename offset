@@ -21,7 +21,7 @@ Run scripts and install pkgs or profiles at logout.
 ##############################################################################
 
 __author__ = 'aysiu after Joseph Chilcote'
-__version__ = '1.0.0'
+__version__ = '1.0.9'
 
 import argparse
 import datetime
@@ -39,6 +39,8 @@ from SystemConfiguration import SCDynamicStoreCopyConsoleUser
 offset_dir = '/usr/local/offset'
 logout_every_dir = os.path.join(offset_dir, 'logout-every')
 loginwindow_preferences = '/Library/Preferences/com.apple.loginwindow.plist'
+share_dir = os.path.join(offset_dir, 'share')
+offset_preferences = os.path.join(share_dir, 'com.aysiu.offset.plist')
 
 if os.geteuid() == 0:
     log_file = '/var/log/offset.log'
@@ -172,15 +174,50 @@ def process_items(path, delete_items=False, once=False):
 
 def main():
     '''Main method'''
+    parser = argparse.ArgumentParser(description='This script automatically \
+            processes packages and scripts at first boot \
+            and/or each (subsequent) user login.')
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('--logout', action='store_true')
+    group.add_argument('--version', action='store_true')
+    group.add_argument('--add-ignored-user', action='append',
+            help='Add user to ignored list')
+    group.add_argument('--remove-ignored-user', action='append',
+            help='Remove user from ignored list')
+    args = parser.parse_args()    
+    ignored_users = []
     
-    # Logout is really login window. Check both the last username and the last user state is 'loggedOut' or 'Restart'
-    current_loginwindow = FoundationPlist.readPlist(loginwindow_preferences)
-    lastuser = current_loginwindow['lastUser']
-    if (lastuser == 'loggedOut') or (lastuser == 'Restart'):
-        if os.listdir(logout_every_dir):
-            process_items(logout_every_dir)
-    else:
-        logging.info('Skipping logout script because login state is %s and should be loggedOut or Restart', lastuser)
+    if args.logout:
+        # Logout is really login window. Check both the last username and the last user state is 'loggedOut' or 'Restart'
+        current_loginwindow = FoundationPlist.readPlist(loginwindow_preferences)
+        lastuser = current_loginwindow['lastUser']
+        console_user = current_loginwindow['lastUserName']
+        if (lastuser == 'loggedOut') or (lastuser == 'Restart'):
+            if console_user not in ignored_users:
+                if os.listdir(logout_every_dir):
+                    process_items(logout_every_dir)
+                else:
+                    logging.info('Skipping logout script because user %s is on the ignored user list', console_user)
+        else:
+            logging.info('Skipping logout script because login state is %s and should be loggedOut or Restart', lastuser)
+
+    if args.add_ignored_user:
+        users_to_add = args.add_ignored_user
+        if not prefs.get('ignored_users'):
+            prefs['ignored_users'] = []
+        prefs['ignored_users'].extend(users_to_add)
+        FoundationPlist.writePlist(prefs, offset_preferences)
+
+    if args.remove_ignored_user:
+        users_to_remove = args.remove_ignored_user
+        if prefs.get('ignored_users'):
+            for user in users_to_remove:
+                if user in prefs['ignored_users']:
+                    prefs['ignored_users'].remove(user)
+            FoundationPlist.writePlist(prefs, offset_preferences)
+
+    if args.version:
+        print __version__
 
 if __name__ == '__main__':
     main()
