@@ -37,6 +37,7 @@ from SystemConfiguration import SCDynamicStoreCopyConsoleUser
 
 offset_dir = '/usr/local/offset'
 logout_every_dir = os.path.join(offset_dir, 'logout-every')
+loginwindow_preferences = '/Library/Preferences/com.apple.loginwindow.plist'
 
 if os.geteuid() == 0:
     log_file = '/var/log/offset.log'
@@ -170,12 +171,18 @@ def process_items(path, delete_items=False, once=False):
 
 def main():
     '''Main method'''
-    console_user = SCDynamicStoreCopyConsoleUser(None, None, None)[0]
-    
-    if os.listdir(logout_every_dir):
-        process_items(logout_every_dir)
-    else:
-        logging.info('Skipping logout scripts for user %s', console_user)
+        # Logout is really login window. Check both the last username and the last user state is 'loggedOut' or 'Restart'
+        current_loginwindow = FoundationPlist.readPlist(loginwindow_preferences)
+        lastuser = current_loginwindow['lastUser']
+        console_user = current_loginwindow['lastUserName']
+        if (lastuser == 'loggedOut') or (lastuser == 'Restart'):
+            if console_user not in ignored_users:
+                if os.listdir(logout_every_dir):
+                    process_items(logout_every_dir)
+            else:
+                logging.info('Skipping logout scripts for user %s', console_user)
+        else:
+            logging.info('Skipping logout script because login state is %s and should be loggedOut or Restart', lastuser)
 
 if __name__ == '__main__':
     main()
