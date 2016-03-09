@@ -20,7 +20,7 @@ So Offset, which can be used in conjunction with Outset if you want both scripts
 * Even though in practice, Offset will essentially run logout scripts, technically it's actually running login window scripts. There are four scenarios in which this is a bit messy, but for all practical purposes will likely not cause any harm:
  * If you reboot instead of log out, your "logout" scripts won't run until after the reboot (not technically right when the user has logged out).
  * If you shut down and then start up again, similarly, your "logout" scripts won't run until you start up and get to the login screen.
- * If you log out and _then_ reboot, it's very possible your "logout" scripts will run twice for the same user--once when you've logged out, and then once when you've reboot.
+ * If you log out and _then_ reboot, it's very possible your "logout" scripts will run twice for the same user--once when you've logged out, and then once when you've reboot. (Pre-release 1.2.0 appears to fix this problem, but I need to do more extensive testing before making it official.)
 * Keep in mind Offset runs any scripts as root. Be careful when you're writing those scripts!
 
 ### Unexpected Bonuses
