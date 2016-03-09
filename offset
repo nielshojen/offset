@@ -197,19 +197,31 @@ def main():
             ignored_users = prefs['ignored_users']
 
     if args.logout:
-        # Logout is really login window. Check both the  username and the last user state is 'loggedOut' or 'Restart'
-        current_loginwindow = FoundationPlist.readPlist(loginwindow_preferences)
-        lastuser = current_loginwindow['lastUser']
-        console_user = current_loginwindow['lastUserName']
-        # If a user just logged out or if the machine was just restarted
-        if (lastuser == 'loggedOut') or (lastuser == 'Restart'):
-            if console_user not in ignored_users:
-                if os.listdir(logout_every_dir):
-                    process_items(logout_every_dir)
-                else:
-                    logging.info('Skipping logout script because user %s is on the ignored user list', console_user)
+        # Determine whether this is a logout or a straight reboot (as opposed to a reboot after a logout)
+        getlasthead = 'last | head -n3'
+        p = subprocess.Popen(getlasthead, shell=True, bufsize=0, stdout=subprocess.PIPE)
+        p.wait()
+        lasthead=p.stdout.read()
+        p.stdout.close()
+        lastheadlist = [x.split() for x in lasthead.split("\n")]
+
+        ### We don't know if the line below reboot is going to be shutdown or a user, so we'll have to test both
+        # If the second line is shutdown and the third line is not shutdown or reboot and the second line's start time is the same as the third line's end time... or if the second line is not shutdown or reboot and its end time is the same as the start time... 
+        if((lastheadlist[0][0] != "reboot") or (lastheadlist[0][0] == "reboot" and lastheadlist[1][0] == "shutdown" and lastheadlist[2][0] != "reboot" and lastheadlist[2][0] != "shutdown" and lastheadlist[1][5] == lastheadlist[2][7]) or (lastheadlist[0][0] == "reboot" and lastheadlist[1][0] != "reboot" and lastheadlist[1][0] != "shutdown" and lastheadlist[0][5] == lastheadlist[1][7])):
+            # Logout is really login window. Check both the  username and the last user state is 'loggedOut' or 'Restart'
+            current_loginwindow = FoundationPlist.readPlist(loginwindow_preferences)
+            lastuser = current_loginwindow['lastUser']
+            console_user = current_loginwindow['lastUserName']
+            if (lastuser == 'loggedOut') or (lastuser == 'Restart'):
+                if console_user not in ignored_users:
+                    if os.listdir(logout_every_dir):
+                        process_items(logout_every_dir)
+                    else:
+                        logging.info('Skipping logout scripts, because user %s is on the ignored user list', console_user)
+            else:
+                logging.info('Skipping logout scripts, because login state is %s and should be loggedOut or Restart', lastuser)
         else:
-            logging.info('Skipping logout script because login state is %s and should be loggedOut or Restart', lastuser)
+            logging.info('Skipping logout scripts, because this is a reboot after a logout')
 
     if args.add_ignored_user:
         users_to_add = args.add_ignored_user
