@@ -20,7 +20,7 @@ So Offset, which can be used in conjunction with Outset if you want both scripts
 * Even though in practice, Offset will essentially run logout scripts, technically it's actually running login window scripts. There are four scenarios in which this is a bit messy, but for all practical purposes will likely not cause any harm:
  * If you reboot instead of log out, your "logout" scripts won't run until after the reboot (not technically right when the user has logged out).
  * If you shut down and then start up again, similarly, your "logout" scripts won't run until you start up and get to the login screen.
- * If you log out and _then_ reboot, it's very possible your "logout" scripts will run twice for the same user--once when you've logged out, and then once when you've reboot. (Pre-release 1.2.0 appears to fix this problem, but I need to do more extensive testing before making it official.)
+ * If you log out (e.g., 10:58:20) and _then_ reboot within the minute (e.g., 10:58:45--not sure why you would ever do this), it's possible your "logout" scripts will run twice for the same user--once when you've logged out, and then once when you've reboot. Offset does prevent the re-running of the scripts if the reboot is not in the same minute as the logout. Unfortunately, the way Mac OS X keeps track of login sessions, the timestamp is based only on the minute and not the seconds!
 * Keep in mind Offset runs any scripts as root. Be careful when you're writing those scripts!
 
 ### Unexpected Bonuses
