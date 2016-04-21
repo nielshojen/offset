@@ -2,7 +2,7 @@
 Automatically process packages and scripts at logout
 
 ## Backstory
-Heavily based on (as in, reuses barely-tweaked code from) Joseph Chilcote's [Outset](https://github.com/chilcote/outset), which processes packages and scripts at boot and login. He believed the running of logout scripts was outside the scopes of his project and also had reservations about the implementation, so he suggested I could make it and call it _offset_, which is actually a great name, when you start looking at all the dictionary definitions of the word (a counterbalance, an offshoot, an actual outset still).
+Heavily based on Joseph Chilcote's [Outset](https://github.com/chilcote/outset), which processes packages and scripts at boot and login. He believed the running of logout scripts was outside the scope of his project and also had reservations about the implementation, so he suggested I could make it and call it _offset_, which is actually a great name, when you start looking at all the dictionary definitions of the word (a counterbalance, an offshoot, an actual outset still).
 
 There was a bit of debate about what method to use for this, since there is [a workaround](http://apple.stackexchange.com/a/151492) that uses a Launch Agent that then runs trapped code when the script gets SIGINT, SIGUP, or SIGTERM. chilcote had some concerns about that approach: that it does not respawn if killed prematurely, and that it will run the script's commands without warning the user if the Launch Agent is killed prematurely. Anecdotally, I haven't noticed any of these issues adversely affecting day-to-day functionality in my workplace, but if there's a tool that can be used by many people in various contexts, it's good to use a method that's a bit more thoroughly tested.
 
