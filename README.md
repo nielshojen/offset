@@ -1,9 +1,6 @@
 # Offset
 Automatically process packages and scripts at logout
 
-## Note
-Not currently working for macOS 10.13. I'm in the process of trying to fix that. Works fine for 10.12 and 10.11 at least. May also work for 10.10 and 10.9.
-
 ## Backstory
 Heavily based on Joseph Chilcote's [Outset](https://github.com/chilcote/outset), which processes packages and scripts at boot and login. He believed the running of logout scripts was outside the scope of his project and also had reservations about the implementation, so he suggested I could make it and call it _offset_, which is actually a great name, when you start looking at all the dictionary definitions of the word (a counterbalance, an offshoot, an actual outset still).
 
@@ -25,6 +22,9 @@ So Offset, which can be used in conjunction with Outset if you want both scripts
  * If you shut down and then start up again, similarly, your "logout" scripts won't run until you start up and get to the login screen.
  * If you log out (e.g., 10:58:20) and _then_ reboot within the minute (e.g., 10:58:45--not sure why you would ever do this), it's possible your "logout" scripts will run twice for the same user--once when you've logged out, and then once when you've reboot. Offset does prevent the re-running of the scripts if the reboot is not in the same minute as the logout. Unfortunately, the way Mac OS X keeps track of login sessions, the timestamp is based only on the minute and not the seconds!
 * Keep in mind Offset runs any scripts as root. Be careful when you're writing those scripts!
+
+### Notes about macOS 10.13 (High Sierra)
+In High Sierra, the change from loggedIn to loggedOut in the com.apple.loginwindow.plist doesn't happen immediately. The time it takes to switch seems to vary. It can be a little more than a second or even slightly more than two seconds. So if Offset sees the OS is 10.13, Offset will wait 2.5 seconds before checking to see the loggedOut status.
 
 ### Unexpected Bonuses
 * Oddly enough, even if you have a user set to automatically log in, Offset will still work when you reboot your Mac--I've tested this!
