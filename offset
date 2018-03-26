@@ -173,6 +173,13 @@ def process_items(path, delete_items=False, once=False):
         if delete_items: cleanup(script)
 
 def main():
+    # Dirty hack to wait 1.7 seconds for the logged-out state to change in High Sierra
+    # Get the version of macOS that's running
+    mac_version=(platform.mac_ver()[0]).split('.')[1]
+    # If it's 13, then wait 1.7 seconds
+    if mac_version == 13:
+        time.sleep(1.7)
+    
     '''Main method'''
     parser = argparse.ArgumentParser(description='This script automatically \
             processes packages and scripts at first boot \
