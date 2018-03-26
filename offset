@@ -177,7 +177,7 @@ def main():
     # Get the version of macOS that's running
     mac_version=(platform.mac_ver()[0]).split('.')[1]
     # If it's 13, then wait 1.7 seconds
-    if mac_version == 13:
+    if mac_version == '13':
         time.sleep(1.7)
     
     '''Main method'''
