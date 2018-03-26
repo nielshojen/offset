@@ -24,7 +24,7 @@ So Offset, which can be used in conjunction with Outset if you want both scripts
 * Keep in mind Offset runs any scripts as root. Be careful when you're writing those scripts!
 
 ### Notes about macOS 10.13 (High Sierra)
-In High Sierra, the change from loggedIn to loggedOut in the com.apple.loginwindow.plist doesn't happen immediately. The time it takes to switch seems to vary. It can be a little more than a second or even slightly more than two seconds. So if Offset sees the OS is 10.13, Offset will wait 2.5 seconds before checking to see the loggedOut status.
+In High Sierra, the change from loggedIn to loggedOut in the com.apple.loginwindow.plist doesn't happen immediately. The time it takes to switch seems to vary. It can be a little more than a second or even slightly more than three seconds. So if Offset sees the OS is 10.13, Offset will wait 4 seconds before checking to see the loggedOut status.
 
 ### Unexpected Bonuses
 * Oddly enough, even if you have a user set to automatically log in, Offset will still work when you reboot your Mac--I've tested this!
