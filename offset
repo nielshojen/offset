@@ -219,7 +219,7 @@ def main():
             current_loginwindow = FoundationPlist.readPlist(loginwindow_preferences)
             lastuser = current_loginwindow['lastUser']
             console_user = current_loginwindow['lastUserName']
-            if (lastuser == 'loggedOut') or (lastuser == 'Restart'):
+            if (mac_version == '13') or (lastuser == 'loggedOut') or (lastuser == 'Restart'):
                 if console_user not in ignored_users:
                     if os.listdir(logout_every_dir):
                         process_items(logout_every_dir)
