@@ -1,5 +1,5 @@
 # Offset
-Automatically process packages and scripts at logout
+Automatically process packages and scripts at logout (for 10.12 and earlier) or login window (for 10.13).
 
 ## Backstory
 Heavily based on Joseph Chilcote's [Outset](https://github.com/chilcote/outset), which processes packages and scripts at boot and login. He believed the running of logout scripts was outside the scope of his project and also had reservations about the implementation, so he suggested I could make it and call it _offset_, which is actually a great name, when you start looking at all the dictionary definitions of the word (a counterbalance, an offshoot, an actual outset still).
@@ -16,17 +16,17 @@ So Offset, which can be used in conjunction with Outset if you want both scripts
 * In addition to slightly modifying a few variable names, I significantly pared down Joseph Chilcote's original script, because I couldn't come up with any use cases for a logout-once scenario. I figured anything you wanted to do once you could do with a login-once using Outset instead of a logout-once in Offset. Logout scripts typically clean something up every time a user logs in. A login script that runs once per user usually sets up something as a default, which the user can later change.
 * If you have only one script to run at logout, you may want to consider using Apple's deprecated LogoutHook instead of using Offset, because the direct linking will give you access to the $1 variable (currently-logged-in user). With Offset, your scripts will have to figure out the last-logged-in user from the output of ```defaults read /Library/Preferences/com.apple.loginwindow lastUserName```
 
-### Caveats
+### Notes about macOS 10.13 (High Sierra)
+In High Sierra, the change from loggedIn to loggedOut in the com.apple.loginwindow.plist doesn't happen immediately. The time it takes to switch seems to vary. It can be a little more than a second or even slightly more than three seconds. I did some trials of having a time delay before checking for the loggedIn/loggedOut status, and there didn't seem to be a consistent time delay that would reliably work. So if Offset sees the OS is 10.13, it will pretty much just run at the login window. I haven't done extensive testing on this, but I don't believe it will run twice on reboot.
+
+### Caveats for macOS 10.12 (Sierra) and earlier
 * Even though in practice, Offset will essentially run logout scripts, technically it's actually running login window scripts. There are four scenarios in which this is a bit messy, but for all practical purposes will likely not cause any harm:
  * If you reboot instead of log out, your "logout" scripts won't run until after the reboot (not technically right when the user has logged out).
  * If you shut down and then start up again, similarly, your "logout" scripts won't run until you start up and get to the login screen.
  * If you log out (e.g., 10:58:20) and _then_ reboot within the minute (e.g., 10:58:45--not sure why you would ever do this), it's possible your "logout" scripts will run twice for the same user--once when you've logged out, and then once when you've reboot. Offset does prevent the re-running of the scripts if the reboot is not in the same minute as the logout. Unfortunately, the way Mac OS X keeps track of login sessions, the timestamp is based only on the minute and not the seconds!
 * Keep in mind Offset runs any scripts as root. Be careful when you're writing those scripts!
 
-### Notes about macOS 10.13 (High Sierra)
-In High Sierra, the change from loggedIn to loggedOut in the com.apple.loginwindow.plist doesn't happen immediately. The time it takes to switch seems to vary. It can be a little more than a second or even slightly more than three seconds. So if Offset sees the OS is 10.13, Offset will wait 4 seconds before checking to see the loggedOut status.
-
-### Unexpected Bonuses
+#### Unexpected Bonuses for macOS 10.12 (Sierra) and earlier
 * Oddly enough, even if you have a user set to automatically log in, Offset will still work when you reboot your Mac--I've tested this!
 * And if you have a user logged in locally on a machine and another user logged in simultaneously on the same machine remotely via Apple Remote Desktop, and both users log out around the same time, scripts will run both times (and the lastUserName will work in scripts for both users). I have tested this.
 
