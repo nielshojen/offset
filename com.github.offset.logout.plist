@@ -10,6 +10,7 @@
   </array>
   <key>ProgramArguments</key>
   <array>
+    <string>/usr/bin/python</string>
     <string>/usr/local/offset/offset</string>
     <string>--logout</string>
   </array>
