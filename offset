@@ -165,15 +165,12 @@ def process_items(path, delete_items=False, once=False):
 
     for package in packages:
         install_package(package)
-        if delete_items: cleanup(package)
 
     for profile in profiles:
         task = install_profile(profile)
-        if delete_items: cleanup(profile)
 
     for script in scripts:
         task = run_script(script)
-        if delete_items: cleanup(script)
 
 def main():
     # Get the version of macOS that's running
