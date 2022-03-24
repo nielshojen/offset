@@ -4,7 +4,8 @@ Automatically process packages and scripts at logout (for 10.12 and earlier) or 
 ## Modifications done from the original version
 * Dropped Foundation Plist
 * Add embedded python3 v3.9.7
-* change the script to run on embedded python3s
+* change the script to run on embedded python3
+* make overrides to makefile by sticking variables in a file called config.mk
 
 ## Backstory
 Heavily based on Joseph Chilcote's [Outset](https://github.com/chilcote/outset), which processes packages and scripts at boot and login. He believed the running of logout scripts was outside the scope of his project and also had reservations about the implementation, so he suggested I could make it and call it _offset_, which is actually a great name, when you start looking at all the dictionary definitions of the word (a counterbalance, an offshoot, an actual outset still).

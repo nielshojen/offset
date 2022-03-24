@@ -3,20 +3,22 @@ include /usr/local/share/luggage/luggage.make
 PB_EXTRA_ARGS+= --sign "[name of your installer dev cert]"
 TITLE=offset
 REVERSE_DOMAIN=com.github
-PACKAGE_VERSION=2.0.0
+PACKAGE_VERSION=2.0.1
 PYTHONTOOLDIR=/tmp/relocatable-python-git
 DEV_APP_CERT=[name of your app dev cert]
+
+-include config.mk
 
 PAYLOAD=\
 	pack-script \
 	pack-Library-LaunchAgents-com.github.offset.logout.plist \
 	pack-script-preinstall \
 	pack-python \
-	codesign \
 	sign
 
 pack-script: l_usr_local
 	@sudo mkdir -p ${WORK_D}/usr/local/offset/share
+	@sudo mkdir -p ${WORK_D}/usr/local/offset/logout-every
 	@sudo ${CP} offset ${WORK_D}/usr/local/offset/
 	@sudo ${CP} preferences.plist ${WORK_D}/usr/local/offset/share
 	@sudo chown -R root:wheel ${WORK_D}/usr/local/offset/
