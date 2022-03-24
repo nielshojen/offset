@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/local/offset/offset-python
 
 '''
 Run scripts and install pkgs or profiles at logout.
@@ -18,14 +18,17 @@ Run scripts and install pkgs or profiles at logout.
 #  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #  License for the specific language governing permissions and limitations
 #  under the License.
+#
+# Modified by Niels Højen for python3 compatibility and adding embedded python
+#
 ##############################################################################
 
-__author__ = 'aysiu after Joseph Chilcote'
-__version__ = '1.4.2'
+__author__ = 'nielshojen'
+__version__ = '2.0.0'
 
 import argparse
 import datetime
-import FoundationPlist
+import plistlib
 import logging
 import os
 import platform
@@ -40,7 +43,7 @@ offset_dir = '/usr/local/offset'
 logout_every_dir = os.path.join(offset_dir, 'logout-every')
 loginwindow_preferences = '/Library/Preferences/com.apple.loginwindow.plist'
 share_dir = os.path.join(offset_dir, 'share')
-offset_preferences = os.path.join(share_dir, 'com.aysiu.offset.plist')
+offset_preferences = os.path.join(share_dir, 'preferences.plist')
 
 if os.geteuid() == 0:
     log_file = '/var/log/offset.log'
@@ -128,12 +131,12 @@ def run_script(pathname):
         logging.info('Processing %s', pathname)
         (out, err) = proc.communicate()
         if err and proc.returncode == 0:
-            logging.info('Output from %s on stderr but it still ran successfully: %s', pathname, err)
+            logging.info('Output from %s on stderr but it still ran successfully: %s', pathname, err.decode())
         elif proc.returncode > 0:
-            logging.error('Failure processing %s: %s', pathname, err)
+            logging.error('Failure processing %s: %s', pathname, err.decode())
             return False
     except OSError as err:
-        logging.error('Failure processing %s: %s', pathname, err)
+        logging.error('Failure processing %s: %s', pathname, err.decode())
         return False
     return True
 
@@ -195,7 +198,9 @@ def main():
         os.makedirs(share_dir)
 
     if os.path.exists(offset_preferences):
-        prefs = FoundationPlist.readPlist(offset_preferences)
+        with open(offset_preferences, 'rb') as f:
+            prefs = plistlib.load(f)
+            f.close()
         if prefs.get('ignored_users'):
             ignored_users = prefs['ignored_users']
 
@@ -204,7 +209,7 @@ def main():
         getlasthead = 'last | head -n3'
         p = subprocess.Popen(getlasthead, shell=True, bufsize=0, stdout=subprocess.PIPE)
         p.wait()
-        lasthead=p.stdout.read()
+        lasthead=p.stdout.read().decode()
         p.stdout.close()
         lastheadlist = [x.split() for x in lasthead.split("\n")]
 
@@ -212,7 +217,9 @@ def main():
         # If the second line is shutdown and the third line is not shutdown or reboot and the second line's start time is the same as the third line's end time... or if the second line is not shutdown or reboot and its end time is the same as the start time... 
         if((lastheadlist[0][0] != "reboot") or (lastheadlist[0][0] == "reboot" and lastheadlist[1][0] == "shutdown" and lastheadlist[2][0] != "reboot" and lastheadlist[2][0] != "shutdown" and lastheadlist[1][5] == lastheadlist[2][7]) or (lastheadlist[0][0] == "reboot" and lastheadlist[1][0] != "reboot" and lastheadlist[1][0] != "shutdown" and lastheadlist[0][5] == lastheadlist[1][7])):
             # Logout is really login window. Check both the  username and the last user state is 'loggedOut' or 'Restart'
-            current_loginwindow = FoundationPlist.readPlist(loginwindow_preferences)
+            with open(loginwindow_preferences, 'rb') as f:
+                current_loginwindow = plistlib.load(f)
+                f.close()
             lastuser = current_loginwindow['lastUser']
             console_user = current_loginwindow['lastUserName']
             if (mac_version >= '13') or (lastuser == 'loggedOut') or (lastuser == 'Restart'):
@@ -231,7 +238,9 @@ def main():
         if not prefs.get('ignored_users'):
             prefs['ignored_users'] = []
         prefs['ignored_users'].extend(users_to_add)
-        FoundationPlist.writePlist(prefs, offset_preferences)
+        with open(offset_preferences, 'wb') as f:
+            plistlib.dump(prefs, f)
+            f.close()
 
     if args.remove_ignored_user:
         users_to_remove = args.remove_ignored_user
@@ -239,10 +248,12 @@ def main():
             for user in users_to_remove:
                 if user in prefs['ignored_users']:
                     prefs['ignored_users'].remove(user)
-            FoundationPlist.writePlist(prefs, offset_preferences)
+            with open(offset_preferences, 'wb') as f:
+                plistlib.dump(prefs, f)
+                f.close()
 
     if args.version:
-        print __version__
+        print(__version__)
 
 if __name__ == '__main__':
     main()
